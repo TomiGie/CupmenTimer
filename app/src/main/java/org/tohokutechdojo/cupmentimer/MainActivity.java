@@ -43,6 +43,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
             case R.id.stop_button:
                 if (!mTimerFlag){
+                    mCupmenTimer.onFinish();
                     mCupmenTimer.cancel();
                     mTimerFlag = true;
                 }
