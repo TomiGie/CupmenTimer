@@ -62,12 +62,14 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         @Override
         public void onTick(long l) {
+            //1秒おきに呼び出されるメソッド
             mSecond--;
             setTimeText();
         }
 
         @Override
         public void onFinish() {
+            //タイマー終了時に呼び出されるメソッド
             mSecond = 180;
             setTimeText();
         }
