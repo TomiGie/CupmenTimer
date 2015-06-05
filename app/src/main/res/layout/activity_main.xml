@@ -10,7 +10,6 @@
     tools:context=".MainActivity">
 
     <TextView
-        android:text="3:00"
         android:id="@+id/time_textView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content" />
