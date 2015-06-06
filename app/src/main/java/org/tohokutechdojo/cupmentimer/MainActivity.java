@@ -15,15 +15,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private final static int CUPMEN_COMPLETE_TIME       = 10;  // カップ麺完成時間(秒)
     private final static int CUPMEN_BAD_TIME            = 5;  // カップ麺のびる時間(秒)
 
-    private int mCupmenImageDefault  = R.mipmap.men_normal;
-    private int mCupmenImageWaiting  = R.mipmap.men_waiting;
-    private int mCupmenImageComplete = R.mipmap.men_complete;
-    private int mCupmenImageBad      = R.mipmap.men_bad;
-
     private TextView mTimeTextView;
     private CupmenTimer mCupmenTimer;
     private ImageView mCupmenImage;
-    private boolean mTimerFlag;
+    private boolean isTimerWorking;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -37,20 +32,39 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.start_button:
-                if (mTimerFlag){
+                if (!isTimerWorking){
                     mCupmenTimer.start();
-                    mTimerFlag = false;
+                    isTimerWorking = true;
                 }
                 break;
 
             case R.id.stop_button:
-                if (!mTimerFlag){
+                if (isTimerWorking){
                     mCupmenTimer.onFinish();
                     mCupmenTimer.cancel();
-                    mTimerFlag = true;
+                    isTimerWorking = false;
                     initializeCupmenImage();
                 }
                 break;
+        }
+    }
+
+    /**
+     * カップ麺の状態をチェックして画像を変更する
+     * CupmenTimerの onTick() で1秒毎に呼ばれる
+     */
+    public void checkCupmenState(int checkTime) {
+        // ラーメンが伸びる時間を過ぎたら
+        if (checkTime <= CUPMEN_BAD_TIME) {
+            mCupmenImage.setImageResource(R.mipmap.men_waiting);
+        }
+        // ラーメン完成の時間が過ぎたら
+        else if (checkTime <= CUPMEN_COMPLETE_TIME) {
+            mCupmenImage.setImageResource(R.mipmap.men_waiting);
+        }
+        // その他(ラーメン完成前)
+        else {
+            mCupmenImage.setImageResource(R.mipmap.men_waiting);
         }
     }
 
@@ -70,7 +84,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
      * カウントダウンタイマーの秒数等をセット
      */
     public void setCupmenTimer() {
-        mTimerFlag = true;
+        isTimerWorking = false;
         mCupmenTimer = new CupmenTimer(CUPMEN_COUNT_DOWN_TIME * 1000, CUPMEN_COUNT_DOWN_INTERVAL);
     }
 
@@ -78,23 +92,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
      * カップ麺の画像を初期状態に戻す
      */
     public void initializeCupmenImage() {
-        mCupmenImage.setImageResource(mCupmenImageDefault);
-    }
-
-    /**
-     * カップ麺の状態をチェックして画像を変更する
-     * CupmenTimerの onTick() で1秒毎に呼ばれる
-     */
-    public void checkCupmenState(int checkTime) {
-        if (checkTime <= CUPMEN_BAD_TIME) {
-            mCupmenImage.setImageResource(mCupmenImageBad);
-        }
-        else if (checkTime <= CUPMEN_COMPLETE_TIME) {
-            mCupmenImage.setImageResource(mCupmenImageComplete);
-        }
-        else {
-            mCupmenImage.setImageResource(mCupmenImageWaiting);
-        }
+        mCupmenImage.setImageResource(R.mipmap.men_normal);
     }
 
     /**
