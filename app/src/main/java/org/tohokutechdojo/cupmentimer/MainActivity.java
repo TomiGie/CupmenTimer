@@ -12,12 +12,12 @@ import android.widget.TextView;
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
     private final static int CUPMEN_COUNT_DOWN_INTERVAL = 1000; // カウントダウンの間隔(ミリ秒)
     private final static int CUPMEN_COUNT_DOWN_TIME     = 15;  // カウントダウンの時間(秒)
-    private final static int CUPMEN_COMPLETE_TIME       = 10;  // カップ麺完成時間(秒)
-    private final static int CUPMEN_BAD_TIME            = 5;  // カップ麺のびる時間(秒)
+    private final static int CUPMEN_COMPLETE_TIME       = 5;  // カップ麺完成時間(秒)
+    private final static int CUPMEN_BAD_TIME            = 1;  // カップ麺のびる時間(秒)
 
     private TextView mTimeTextView;
-    private CupmenTimer mCupmenTimer;
-    private ImageView mCupmenImage;
+    private CupmenTimer cupmenTimer;
+    private ImageView cupmenImage;
     private boolean isTimerWorking;
 
     @Override
@@ -33,15 +33,15 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         switch (view.getId()) {
             case R.id.start_button:
                 if (!isTimerWorking){
-                    mCupmenTimer.start();
+                    cupmenTimer.start();
                     isTimerWorking = true;
                 }
                 break;
 
             case R.id.stop_button:
                 if (isTimerWorking){
-                    mCupmenTimer.onFinish();
-                    mCupmenTimer.cancel();
+                    cupmenTimer.onFinish();
+                    cupmenTimer.cancel();
                     isTimerWorking = false;
                     initializeCupmenImage();
                 }
@@ -56,21 +56,21 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     public void checkCupmenState(int checkTime) {
         // ラーメンが伸びる時間を過ぎたら
         if (checkTime <= CUPMEN_BAD_TIME) {
-            mCupmenImage.setImageResource(R.mipmap.men_waiting);
+            cupmenImage.setImageResource(R.mipmap.men_waiting);
         }
         // ラーメン完成の時間が過ぎたら
         else if (checkTime <= CUPMEN_COMPLETE_TIME) {
-            mCupmenImage.setImageResource(R.mipmap.men_waiting);
+            cupmenImage.setImageResource(R.mipmap.men_waiting);
         }
         // その他(ラーメン完成前)
         else {
-            mCupmenImage.setImageResource(R.mipmap.men_waiting);
+            cupmenImage.setImageResource(R.mipmap.men_waiting);
         }
     }
 
     public void setLayouts() {
         mTimeTextView = (TextView) findViewById(R.id.time_textView);
-        mCupmenImage = (ImageView) findViewById(R.id.image_cupmen);
+        cupmenImage = (ImageView) findViewById(R.id.image_cupmen);
 
         ImageButton startButton = (ImageButton) findViewById(R.id.start_button);
         startButton.setOnClickListener(this);
@@ -85,14 +85,14 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
      */
     public void setCupmenTimer() {
         isTimerWorking = false;
-        mCupmenTimer = new CupmenTimer(CUPMEN_COUNT_DOWN_TIME * 1000, CUPMEN_COUNT_DOWN_INTERVAL);
+        cupmenTimer = new CupmenTimer(CUPMEN_COUNT_DOWN_TIME * 1000, CUPMEN_COUNT_DOWN_INTERVAL);
     }
 
     /**
      * カップ麺の画像を初期状態に戻す
      */
     public void initializeCupmenImage() {
-        mCupmenImage.setImageResource(R.mipmap.men_normal);
+        cupmenImage.setImageResource(R.mipmap.men_normal);
     }
 
     /**
@@ -100,7 +100,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
      */
     public class CupmenTimer extends CountDownTimer {
 
-        private int mSecond = CUPMEN_COUNT_DOWN_TIME;
+        private int countDownTime = CUPMEN_COUNT_DOWN_TIME;
 
         public CupmenTimer(long millisInFuture, long countDownInterval) {
             super(millisInFuture, countDownInterval);
@@ -110,21 +110,21 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         @Override
         public void onTick(long l) {
             //CUPMEN_COUNT_DOWN_INTERVAL秒おきに呼び出されるメソッド
-            mSecond--;
+            countDownTime--;
             setTimeText();
-            checkCupmenState(mSecond);
+            checkCupmenState(countDownTime);
         }
 
         @Override
         public void onFinish() {
             //タイマー終了時に呼び出されるメソッド
-            mSecond = CUPMEN_COUNT_DOWN_TIME;
+            countDownTime = CUPMEN_COUNT_DOWN_TIME;
             setTimeText();
         }
 
         private void setTimeText() {
-            int minute = getMinute(mSecond);
-            int second = getSecond(minute, mSecond);
+            int minute = getMinute(countDownTime);
+            int second = getSecond(minute, countDownTime);
             String time = getTimeText(minute, second);
             mTimeTextView.setText(time);
         }
