@@ -37,13 +37,3 @@ public void checkCupmenState(int checkTime) {
 このメソッドでは、呼び出された時の時間がどの(画像の)状態にあるかをチェックし、その時間に対応した画像をセットしています。
 画像を変更したい場合は①②③の部分をそれぞれに対応した画像に指定すれば、変更が可能です。  
 デフォルトで設定している画像の他にも2種類、mipmapフォルダに画像を用意してありますので、そちらを利用して頂いて大丈夫です。  
-  
-#License
-
-Copyright 2014 The Android Open Source Project, Inc.
-
-Licensed to the Apache Software Foundation (ASF) under one or more contributor license agreements. See the NOTICE file distributed with this work for additional information regarding copyright ownership. The ASF licenses this file to you under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with the License. You may obtain a copy of the License at
-
-http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the specific language governing permissions and limitations under the License.
